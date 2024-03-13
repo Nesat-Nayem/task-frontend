@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Bar } from "react-chartjs-2";
-import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Bar, Pie, Radar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +11,14 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  ArcElement,
+} from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 
 ChartJS.register(
   CategoryScale,
@@ -20,19 +26,29 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  ArcElement
 );
+
+
 
 export default function Home() {
   const [data, setData] = useState(null);
+  const [sorted, setSorted] = useState(false);
+  const [tableView, setTableView] = useState(false);
+  const [chartType, setChartType] = useState('horizontal');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://outstanding-fawn-uniform.cyclic.app/api/data");
+        const response = await axios.get('http://localhost:7070/api/data');
         setData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -42,6 +58,10 @@ export default function Home() {
   if (!data) {
     return <div>Loading...</div>;
   }
+
+
+
+
 
   // Prepare the data for the ageGender chart
   const ageGenderLabels = data.ageGenderData.map((item) => item._id);
@@ -184,31 +204,33 @@ export default function Home() {
     0
   );
 
+
+
+  // Filter out the answers with an empty "_id"
+  const filteredAnswersDataf = data.answersData.filter(item => item._id);
+
+  // Sort answers data based on count if needed
+  const sortedOrFilteredAnswersData = sorted
+    ? [...filteredAnswersDataf].sort((a, b) => b.count - a.count)
+    : filteredAnswersDataf;
   // Prepare the data for the answers chart
-  const answersLabels = filteredAnswersData.map((item) => item._id);
-  const answersData = filteredAnswersData.map((item) => item.count);
+  const answersLabels = sortedOrFilteredAnswersData.map(item => item._id);
+  const answersData = sortedOrFilteredAnswersData.map(item => item.count);
 
   const answersChartData = {
     labels: answersLabels,
     datasets: [
       {
-        label: "Count",
+        label: 'Count',
         data: answersData,
-        backgroundColor: "rgba(153, 102, 255, 0.5)",
-        datalabels: {
-          color: "black",
-          anchor: "end",
-          align: "top",
-          formatter: (value, context) => {
-            const percentage = ((value / totalAnswers) * 100).toFixed(1);
-            return `${percentage}%`;
-          },
-        },
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
       },
     ],
   };
 
+
   const answersChartOptions = {
+    indexAxis: chartType === 'horizontal' ? 'y' : 'x',
     responsive: true,
     plugins: {
       tooltip: {
@@ -229,6 +251,57 @@ export default function Home() {
         },
       },
     },
+  };
+
+    // Event handlers
+    const handleSortToggle = () => setSorted(!sorted);
+    const handleTableViewToggle = () => setTableView(!tableView);
+    const handleChartTypeChange = (event) => setChartType(event.target.value);
+  
+  // Define chartOptions based on chartType
+  const getChartOptions = () => {
+    switch (chartType) {
+      case 'horizontal':
+        return {
+          indexAxis: 'y',
+          // ... other options specific to horizontal bar chart
+        };
+      case 'vertical':
+        return {
+          indexAxis: 'x',
+          // ... other options specific to vertical bar chart
+        };
+      case 'pie':
+        // Pie charts do not use indexAxis
+        return {
+          // ... other options specific to pie chart
+        };
+      case 'spider':
+        // Radar (spider) charts do not use indexAxis
+        return {
+          // ... other options specific to radar chart
+        };
+      default:
+        return {};
+    }
+  };
+
+      // Now we call getChartOptions to get the correct options for the current chartType
+  const chartOptions = getChartOptions();
+
+  // Render chart based on selected type
+  const renderChart = () => {
+    switch (chartType) {
+      case 'horizontal':
+      case 'vertical':
+        return <Bar data={answersChartData} options={chartOptions} />;
+      case 'pie':
+        return <Pie data={answersChartData} options={chartOptions} />;
+      case 'spider':
+        return <Radar data={answersChartData} options={chartOptions} />;
+      default:
+        return null;
+    }
   };
 
   // Register the datalabels plugin
@@ -316,8 +389,36 @@ export default function Home() {
         <Bar data={locationChartData} options={locationChartOptions} />
       </div>
       <div>
-        <h2>Answers </h2>
-        <Bar data={answersChartData} options={answersChartOptions} />
+        <h2>Answers Distribution</h2>
+        <button onClick={handleSortToggle}>{sorted ? 'Unsort' : 'Sort'}</button>
+        <button onClick={handleTableViewToggle}>{tableView ? 'Hide Table' : 'Show Table'}</button>
+        <select onChange={handleChartTypeChange} value={chartType}>
+          <option value="horizontal">Horizontal Bar</option>
+          <option value="vertical">Vertical Bar</option>
+          <option value="pie">Pie</option>
+          <option value="spider">Spider</option>
+        </select>
+
+        {tableView ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Answer</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedOrFilteredAnswersData.map((item) => (
+                <tr key={item._id}>
+                  <td>{item._id || 'Unknown'}</td>
+                  <td>{item.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          renderChart()
+        )}
       </div>
     </div>
   );
