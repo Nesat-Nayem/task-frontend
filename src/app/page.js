@@ -21,7 +21,6 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import AgeGenderChart from "@/components/AgeGenderChart";
 import LocationChart from "@/components/LocationChart";
-// import AnswersChart from "@/components/AnswersChart";
 
 ChartJS.register(
   CategoryScale,

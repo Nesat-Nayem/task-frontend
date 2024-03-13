@@ -1,8 +1,24 @@
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartDataLabels
+);
 
 export default function LocationChart({ locationData }) {
   // Calculate the total count for all locations to display percentages
@@ -14,13 +30,14 @@ export default function LocationChart({ locationData }) {
     labels: locationLabels,
     datasets: [
       {
-        label: 'Amount',
+        label: "Amount",
         data: locationCounts,
-        backgroundColor: '#44f1b6',
+        backgroundColor: "#44f1b6",
+        barThickness: 50,
         datalabels: {
-          color: 'black',
-          anchor: 'end',
-          align: 'end',
+          color: "black",
+          anchor: "end",
+          align: "end",
           formatter: (value, context) => {
             const percentage = ((value / locationTotal) * 100).toFixed(1);
             return `${percentage}%`;
@@ -31,7 +48,7 @@ export default function LocationChart({ locationData }) {
   };
 
   const locationChartOptions = {
-    indexAxis: 'y',
+    indexAxis: "y",
     responsive: true,
     scales: {
       y: {
@@ -64,7 +81,7 @@ export default function LocationChart({ locationData }) {
       },
       datalabels: {
         font: {
-          weight: 'bold',
+          weight: "bold",
         },
       },
     },
