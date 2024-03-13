@@ -29,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:7070/api/data");
+        const response = await axios.get("https://outstanding-fawn-uniform.cyclic.app/api/data");
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
