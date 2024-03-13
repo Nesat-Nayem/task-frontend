@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -126,20 +127,61 @@ export default function Home() {
     },
   };
 
-  // Prepare the data for the answers chart
-  const answersLabels = data.answersData.map((item) => item._id);
-  const answersData = data.answersData.map((item) => item.count);
+// Filter out the data entry with an empty "_id"
+const filteredAnswersData = data.answersData.filter((item) => item._id !== '');
 
-  const answersChartData = {
-    labels: answersLabels,
-    datasets: [
-      {
-        label: "Count",
-        data: answersData,
-        backgroundColor: "rgba(153, 102, 255, 0.5)",
+// Calculate the total count of all answers
+const totalAnswers = filteredAnswersData.reduce((sum, item) => sum + item.count, 0);
+
+// Prepare the data for the answers chart
+const answersLabels = filteredAnswersData.map((item) => item._id);
+const answersData = filteredAnswersData.map((item) => item.count);
+
+const answersChartData = {
+  labels: answersLabels,
+  datasets: [
+    {
+      label: 'Count',
+      data: answersData,
+      backgroundColor: 'rgba(153, 102, 255, 0.5)',
+      datalabels: {
+        color: 'black',
+        anchor: 'end',
+        align: 'top',
+        formatter: (value, context) => {
+          const percentage = ((value / totalAnswers) * 100).toFixed(1);
+          return `${percentage}%`;
+        },
       },
-    ],
-  };
+    },
+  ],
+};
+
+const answersChartOptions = {
+  responsive: true,
+  plugins: {
+    tooltip: {
+      callbacks: {
+        label: (context) => {
+          const value = context.parsed.y;
+          const percentage = ((value / totalAnswers) * 100).toFixed(1);
+          return `Count: ${value} (${percentage}%)`;
+        },
+      },
+    },
+    legend: {
+      display: false,
+    },
+    datalabels: {
+      font: {
+        weight: 'bold',
+      },
+    },
+  },
+};
+
+// Register the datalabels plugin
+ChartJS.register(ChartDataLabels);
 
   return (
     <div>
@@ -221,7 +263,7 @@ export default function Home() {
       </div>
       <div>
         <h2>Answers </h2>
-        <Bar data={answersChartData} />
+        <Bar data={answersChartData} options={answersChartOptions} />
       </div>
     </div>
   );
