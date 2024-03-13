@@ -88,6 +88,9 @@ export default function Home() {
     },
   };
 
+  // Calculate the total count for all locations to display percentages
+  const totalLocationCount = data.locationData.reduce((sum, item) => sum + item.count, 0);
+
   // Prepare the data for the location chart
   const locationLabels = data.locationData.map((item) => item._id);
   const locationData = data.locationData.map((item) => item.count);
@@ -96,11 +99,31 @@ export default function Home() {
     labels: locationLabels,
     datasets: [
       {
-        label: "Count",
+        label: 'Amount',
         data: locationData,
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
+        backgroundColor: '#44f1b6',
       },
     ],
+  };
+
+  const locationChartOptions = {
+    indexAxis: 'y', // Horizontal bar chart
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.label;
+            const value = context.parsed.x;
+            const percentage = ((value / totalLocationCount) * 100).toFixed(1);
+            return `${label}\nAmount: ${value} (${percentage}%)`;
+          },
+          footer: (tooltipItems) => {
+            return `Total: ${totalLocationCount}`;
+          },
+        },
+      },
+    },
   };
 
   // Prepare the data for the answers chart
@@ -193,8 +216,8 @@ export default function Home() {
       </div>
 
       <div>
-        <h2>Location </h2>
-        <Bar data={locationChartData} />
+        <h2>Location Distribution</h2>
+        <Bar data={locationChartData} options={locationChartOptions} />
       </div>
       <div>
         <h2>Answers </h2>
