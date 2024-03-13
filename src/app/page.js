@@ -91,41 +91,72 @@ export default function Home() {
 
   // Calculate the total count for all locations to display percentages
   const totalLocationCount = data.locationData.reduce((sum, item) => sum + item.count, 0);
+// Prepare the data for the location chart
+const locationLabels = data.locationData.map((item) => item._id);
+const locationData = data.locationData.map((item) => item.count);
+const locationTotal = locationData.reduce((sum, count) => sum + count, 0);
 
-  // Prepare the data for the location chart
-  const locationLabels = data.locationData.map((item) => item._id);
-  const locationData = data.locationData.map((item) => item.count);
-
-  const locationChartData = {
-    labels: locationLabels,
-    datasets: [
-      {
-        label: 'Amount',
-        data: locationData,
-        backgroundColor: '#44f1b6',
-      },
-    ],
-  };
-
-  const locationChartOptions = {
-    indexAxis: 'y', // Horizontal bar chart
-    responsive: true,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const label = context.label;
-            const value = context.parsed.x;
-            const percentage = ((value / totalLocationCount) * 100).toFixed(1);
-            return `${label}\nAmount: ${value} (${percentage}%)`;
-          },
-          footer: (tooltipItems) => {
-            return `Total: ${totalLocationCount}`;
-          },
+const locationChartData = {
+  labels: locationLabels,
+  datasets: [
+    {
+      label: 'Amount',
+      data: locationData,
+      backgroundColor: '#44f1b6',
+      datalabels: {
+        color: 'black',
+        anchor: 'end',
+        align: 'end',
+        formatter: (value, context) => {
+          const percentage = ((value / locationTotal) * 100).toFixed(1);
+          return `${percentage}%`;
         },
       },
     },
-  };
+  ],
+};
+
+const locationChartOptions = {
+  indexAxis: 'y',
+  responsive: true,
+  scales: {
+    y: {
+      ticks: {
+        callback: function (value) {
+          return this.getLabelForValue(value);
+        },
+      },
+    },
+    x: {
+      ticks: {
+        display: false,
+      },
+    },
+  },
+  plugins: {
+    tooltip: {
+      callbacks: {
+        title: (context) => context[0].label,
+        label: (context) => {
+          const value = context.parsed.x;
+          const percentage = ((value / locationTotal) * 100).toFixed(1);
+          return `Amount: ${value} (${percentage}%)`;
+        },
+        footer: () => `Total: ${locationTotal}`,
+      },
+    },
+    legend: {
+      display: false,
+    },
+    datalabels: {
+      font: {
+        weight: 'bold',
+      },
+    },
+  },
+};
+
+
 
 // Filter out the data entry with an empty "_id"
 const filteredAnswersData = data.answersData.filter((item) => item._id !== '');
