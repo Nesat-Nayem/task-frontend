@@ -68,7 +68,7 @@ export default function Home() {
   };
 
   const ageGenderChartOptions = {
-    indexAxis: "y",
+    indexAxis: 'y',
     responsive: true,
     plugins: {
       tooltip: {
@@ -86,8 +86,23 @@ export default function Home() {
           },
         },
       },
+      datalabels: {
+        display: false,
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        ticks: {
+          display: false,
+        },
+      },
+      y: {
+        stacked: true,
+      },
     },
   };
+  
 
   // Calculate the total count for all locations to display percentages
   const totalLocationCount = data.locationData.reduce((sum, item) => sum + item.count, 0);
