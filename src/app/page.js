@@ -224,9 +224,12 @@ export default function Home() {
         label: 'Count',
         data: answersData,
         backgroundColor: 'rgba(153, 102, 255, 0.5)',
+        // For vertical bar chart, you might want to set the bar thickness
+        barThickness: chartType === 'vertical' ? undefined : 'flex', // 'flex' for horizontal or undefined for vertical
       },
     ],
   };
+  
 
 
   const answersChartOptions = {
@@ -256,19 +259,31 @@ export default function Home() {
     // Event handlers
     const handleSortToggle = () => setSorted(!sorted);
     const handleTableViewToggle = () => setTableView(!tableView);
-    const handleChartTypeChange = (event) => setChartType(event.target.value);
-  
+    const handleChartTypeChange = (event) => {
+      setChartType(event.target.value);
+    };
+    
   // Define chartOptions based on chartType
   const getChartOptions = () => {
     switch (chartType) {
       case 'horizontal':
         return {
           indexAxis: 'y',
+          scales: {
+            x: {
+              beginAtZero: true,
+            },
+          },
           // ... other options specific to horizontal bar chart
         };
       case 'vertical':
         return {
           indexAxis: 'x',
+          scales: {
+            y: {
+            beginAtZero: true,
+            },
+          },
           // ... other options specific to vertical bar chart
         };
       case 'pie':
@@ -285,6 +300,7 @@ export default function Home() {
         return {};
     }
   };
+  
 
       // Now we call getChartOptions to get the correct options for the current chartType
   const chartOptions = getChartOptions();
@@ -303,6 +319,7 @@ export default function Home() {
         return null;
     }
   };
+  
 
   // Register the datalabels plugin
   ChartJS.register(ChartDataLabels);
