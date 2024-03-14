@@ -21,6 +21,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import AgeGenderChart from "@/components/AgeGenderChart";
 import LocationChart from "@/components/LocationChart";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 ChartJS.register(
   CategoryScale,
@@ -45,7 +46,9 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:7070/api/data");
+        const response = await axios.get(
+          "https://outstanding-fawn-uniform.cyclic.app/api/data"
+        );
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,7 +59,7 @@ export default function Home() {
   }, []);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   // Filter out the data entry with an empty "_id"
@@ -117,6 +120,10 @@ export default function Home() {
             const value = context.raw;
             const percentage = ((value / totalAnswers) * 100).toFixed(1);
             return `${label}: ${value} (${percentage}%)`;
+          },
+          footer: () => {
+            //  to display the total
+            return `Total: ${totalAnswers}`;
           },
         },
       },
@@ -312,7 +319,7 @@ export default function Home() {
             marginTop: "20px",
             marginBottom: "20px",
             padding: "10px",
-            color:"#44f1b6"
+            color: "#44f1b6",
           }}
         >
           Answers
