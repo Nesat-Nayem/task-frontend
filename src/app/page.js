@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, Pie, Radar, Doughnut } from "react-chartjs-2";
+import { Bar, Pie, Radar, Doughnut, PolarArea } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -193,6 +193,17 @@ export default function Home() {
         return {
           // ... other options specific to radar chart
         };
+
+      case "polarArea":
+        return {
+          // ... options specific to polar area chart
+          scale: {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        };
+
       default:
         return {};
     }
@@ -231,7 +242,20 @@ export default function Home() {
         );
       case "doughnut":
         return (
-          <Doughnut  key={tableView} data={answersChartData} options={answersChartOptions} />
+          <Doughnut
+            key={tableView}
+            data={answersChartData}
+            options={answersChartOptions}
+          />
+        );
+
+      case "polarArea":
+        return (
+          <PolarArea
+            key={tableView}
+            data={answersChartData}
+            options={{ ...chartOptions, ...answersChartOptions }}
+          />
         );
 
       default:
@@ -359,6 +383,7 @@ export default function Home() {
             <option value="pie">Pie</option>
             <option value="spider">Spider</option>
             <option value="doughnut">Doughnut</option>
+            <option value="polarArea">Polar Area</option>
           </select>
         </div>
 
