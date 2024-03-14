@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, Pie, Radar } from "react-chartjs-2";
+import { Bar, Pie, Radar, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -96,7 +96,6 @@ export default function Home() {
     ],
   };
 
- 
   const answersChartOptions = {
     indexAxis: chartType === "horizontal" ? "y" : "x",
     responsive: true,
@@ -115,9 +114,6 @@ export default function Home() {
         display: chartType === "pie",
         position: "bottom",
       },
-
-      
-
 
       datalabels: {
         font: {
@@ -233,6 +229,11 @@ export default function Home() {
             options={{ ...chartOptions, ...answersChartOptions }}
           />
         );
+      case "doughnut":
+        return (
+          <Doughnut  key={tableView} data={answersChartData} options={answersChartOptions} />
+        );
+
       default:
         return null;
     }
@@ -357,6 +358,7 @@ export default function Home() {
             <option value="horizontal">Horizontal Bar</option>
             <option value="pie">Pie</option>
             <option value="spider">Spider</option>
+            <option value="doughnut">Doughnut</option>
           </select>
         </div>
 
