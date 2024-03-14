@@ -167,15 +167,26 @@ export default function Home() {
   const chartOptions = getChartOptions();
 
   // Render chart based on selected type
+  // Render chart based on selected type
   const renderChart = () => {
     switch (chartType) {
       case "horizontal":
       case "vertical":
-        return <Bar data={answersChartData} options={chartOptions} />;
+        return (
+          <Bar key={tableView} data={answersChartData} options={chartOptions} />
+        );
       case "pie":
-        return <Pie data={answersChartData} options={chartOptions} />;
+        return (
+          <Pie key={tableView} data={answersChartData} options={chartOptions} />
+        );
       case "spider":
-        return <Radar data={answersChartData} options={chartOptions} />;
+        return (
+          <Radar
+            key={tableView}
+            data={answersChartData}
+            options={chartOptions}
+          />
+        );
       default:
         return null;
     }
@@ -205,7 +216,7 @@ export default function Home() {
         >
           Answers
         </h2>
-        <div style={{ display: "flex", justifyContent: "end", width:"95%" }}>
+        <div style={{ display: "flex", justifyContent: "end", width: "98%" }}>
           <button onClick={handleSortToggle}>
             {sorted ? "Unsort" : "Sort"}
           </button>
@@ -220,26 +231,78 @@ export default function Home() {
           </select>
         </div>
 
-        <div style={{ width: "90%", height: "100%", margin: "0 auto" }}>
-          {tableView ? (
-            <table>
-              <thead>
-                <tr>
-                  <th>Answer</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedOrFilteredAnswersData.map((item) => (
-                  <tr key={item._id}>
-                    <td>{item._id || "Unknown"}</td>
-                    <td>{item.count}</td>
+        <div style={{ display: "flex", width: "100%", margin: "0 auto" }}>
+          {/* Chart container */}
+          <div style={{ flex: tableView ? "1 0 50%" : "1 0 100%" }}>
+            {renderChart()}
+          </div>
+
+          {/* Table container, only displayed when tableView is true */}
+          {tableView && (
+            <div style={{ flex: "1 0 50%", padding: "20px" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontFamily: "Arial, sans-serif",
+                }}
+              >
+                <thead>
+                  <tr
+                    style={{
+                      backgroundColor: "#f2f2f2",
+                      color: "#333",
+                    }}
+                  >
+                    <th
+                      style={{
+                        padding: "12px",
+                        textAlign: "left",
+                        borderBottom: "2px solid #ddd",
+                      }}
+                    >
+                      Answer
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        textAlign: "left",
+                        borderBottom: "2px solid #ddd",
+                      }}
+                    >
+                      Count
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            renderChart()
+                </thead>
+                <tbody>
+                  {sortedOrFilteredAnswersData.map((item, index) => (
+                    <tr
+                      key={item._id}
+                      style={{
+                        backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "12px",
+                          borderBottom: "1px solid #ddd",
+                        }}
+                      >
+                        {item._id || "Unknown"}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          borderBottom: "1px solid #ddd",
+                        }}
+                      >
+                        {item.count}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
