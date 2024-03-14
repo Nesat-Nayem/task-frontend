@@ -33,17 +33,19 @@ export default function AgeGenderChart({ data }) {
 
   const ageGenderChartOptions = useMemo(
     () => ({
-      indexAxis: "y",
+      indexAxis: 'y',
       responsive: true,
       plugins: {
         tooltip: {
+          displayColors: false, // Disable the small color box next to the tooltip text
           callbacks: {
-            label: (context) => {
-              const label = context.dataset.label;
-              const value = context.raw;
-              const total = ageGenderTotalData[context.dataIndex];
-              const percentage = ((value / total) * 100).toFixed(1) + "%";
-              return `${label}: ${value} (${percentage})`;
+            title: (tooltipItems) => {
+              // Return the age range for the title
+              return tooltipItems[0].label;
+            },
+            label: () => {
+              // Return an empty string to avoid showing individual category counts
+              return '';
             },
             footer: (tooltipItems) => {
               // Find the index of the hovered item
@@ -53,18 +55,16 @@ export default function AgeGenderChart({ data }) {
               const femaleValue = ageGenderFemaleData[index];
               const total = ageGenderTotalData[index];
               // Calculate the percentages
-              const malePercentage =
-                ((maleValue / total) * 100).toFixed(1) + "%";
-              const femalePercentage =
-                ((femaleValue / total) * 100).toFixed(1) + "%";
+              const malePercentage = ((maleValue / total) * 100).toFixed(1) + '%';
+              const femalePercentage = ((femaleValue / total) * 100).toFixed(1) + '%';
               // Return the combined data as the footer
               return [
                 `Male: ${maleValue} (${malePercentage})`,
                 `Female: ${femaleValue} (${femalePercentage})`,
                 `Total: ${total}`,
               ];
-            },
-          },
+            }
+          }
         },
         datalabels: {
           display: false,
@@ -84,6 +84,61 @@ export default function AgeGenderChart({ data }) {
     }),
     [ageGenderMaleData, ageGenderFemaleData, ageGenderTotalData]
   );
+  
+
+  // const ageGenderChartOptions = useMemo(
+  //   () => ({
+  //     indexAxis: "y",
+  //     responsive: true,
+  //     plugins: {
+  //       tooltip: {
+  //         callbacks: {
+  //           label: (context) => {
+  //             const label = context.dataset.label;
+  //             const value = context.raw;
+  //             const total = ageGenderTotalData[context.dataIndex];
+  //             const percentage = ((value / total) * 100).toFixed(1) + "%";
+  //             return `${label}: ${value} (${percentage})`;
+  //           },
+  //           footer: (tooltipItems) => {
+  //             // Find the index of the hovered item
+  //             const index = tooltipItems[0].dataIndex;
+  //             // Retrieve the data for both male and female using the index
+  //             const maleValue = ageGenderMaleData[index];
+  //             const femaleValue = ageGenderFemaleData[index];
+  //             const total = ageGenderTotalData[index];
+  //             // Calculate the percentages
+  //             const malePercentage =
+  //               ((maleValue / total) * 100).toFixed(1) + "%";
+  //             const femalePercentage =
+  //               ((femaleValue / total) * 100).toFixed(1) + "%";
+  //             // Return the combined data as the footer
+  //             return [
+  //               `Male: ${maleValue} (${malePercentage})`,
+  //               `Female: ${femaleValue} (${femalePercentage})`,
+  //               `Total: ${total}`,
+  //             ];
+  //           },
+  //         },
+  //       },
+  //       datalabels: {
+  //         display: false,
+  //       },
+  //     },
+  //     scales: {
+  //       x: {
+  //         stacked: true,
+  //         ticks: {
+  //           display: false,
+  //         },
+  //       },
+  //       y: {
+  //         stacked: true,
+  //       },
+  //     },
+  //   }),
+  //   [ageGenderMaleData, ageGenderFemaleData, ageGenderTotalData]
+  // );
 
   return (
     <div>
