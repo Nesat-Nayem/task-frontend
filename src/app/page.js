@@ -40,7 +40,7 @@ export default function Home() {
   const [data, setData] = useState(null);
   const [sorted, setSorted] = useState(false);
   const [tableView, setTableView] = useState(false);
-  const [chartType, setChartType] = useState("horizontal");
+  const [chartType, setChartType] = useState("vertical");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,43 +191,57 @@ export default function Home() {
       </div>
 
       <div>
-  
         <LocationChart locationData={data} />
       </div>
 
       <div>
-        <h2>Answers Distribution</h2>
-        <button onClick={handleSortToggle}>{sorted ? "Unsort" : "Sort"}</button>
-        <button onClick={handleTableViewToggle}>
-          {tableView ? "Hide Table" : "Show Table"}
-        </button>
-        <select onChange={handleChartTypeChange} value={chartType}>
-          <option value="horizontal">Horizontal Bar</option>
-          <option value="vertical">Vertical Bar</option>
-          <option value="pie">Pie</option>
-          <option value="spider">Spider</option>
-        </select>
+        <h2
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            marginBottom: "20px",
+            padding: "10px",
+          }}
+        >
+          Answers
+        </h2>
+        <div style={{ display: "flex", justifyContent: "end", width:"95%" }}>
+          <button onClick={handleSortToggle}>
+            {sorted ? "Unsort" : "Sort"}
+          </button>
+          <button onClick={handleTableViewToggle}>
+            {tableView ? "Hide Table" : "Show Table"}
+          </button>
+          <select onChange={handleChartTypeChange} value={chartType}>
+            <option value="vertical">Vertical Bar</option>
+            <option value="horizontal">Horizontal Bar</option>
+            <option value="pie">Pie</option>
+            <option value="spider">Spider</option>
+          </select>
+        </div>
 
-        {tableView ? (
-          <table>
-            <thead>
-              <tr>
-                <th>Answer</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedOrFilteredAnswersData.map((item) => (
-                <tr key={item._id}>
-                  <td>{item._id || "Unknown"}</td>
-                  <td>{item.count}</td>
+        <div style={{ width: "90%", height: "100%", margin: "0 auto" }}>
+          {tableView ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Answer</th>
+                  <th>Count</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          renderChart()
-        )}
+              </thead>
+              <tbody>
+                {sortedOrFilteredAnswersData.map((item) => (
+                  <tr key={item._id}>
+                    <td>{item._id || "Unknown"}</td>
+                    <td>{item.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            renderChart()
+          )}
+        </div>
       </div>
     </div>
   );
