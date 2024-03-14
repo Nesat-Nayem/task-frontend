@@ -89,10 +89,90 @@ export default function Home() {
         data: answersData,
         backgroundColor: "#44f1b6",
         // For vertical bar chart, you might want to set the bar thickness
-        barThickness: chartType === "vertical" ? undefined : "flex", // 'flex' for horizontal or undefined for vertical
+        // barThickness: chartType === "vertical" ? undefined : "flex", // 'flex' for horizontal or undefined for vertical
+
+        parsing: {
+          key: "count",
+        },
       },
     ],
   };
+
+  // const answersChartOptions = {
+  //   indexAxis: chartType === "horizontal" ? "y" : "x",
+  //   responsive: true,
+  //   plugins: {
+  //     tooltip: {
+  //       callbacks: {
+  //         label: (context) => {
+  //           const value = context.parsed.y;
+  //           const percentage = ((value / totalAnswers) * 100).toFixed(1);
+  //           return `Count: ${value} (${percentage}%)`;
+  //         },
+  //       },
+  //     },
+  //     legend: {
+  //       display: false,
+  //     },
+  //     datalabels: {
+  //       font: {
+  //         weight: "bold",
+  //       },
+  //       formatter: (value, context) => {
+  //         const percentage = ((value / totalAnswers) * 100).toFixed(1);
+  //         return `${percentage}%`;
+  //       },
+  //       color: "#000",
+  //       anchor: (context) => {
+  //         const chartType = context.chart.config.type;
+  //         if (chartType === "bar") {
+  //           return context.dataset.indexAxis === "y" ? "end" : "end";
+  //         } else if (chartType === "pie") {
+  //           return "end";
+  //         }
+  //       },
+  //       align: (context) => {
+  //         const chartType = context.chart.config.type;
+  //         if (chartType === "bar") {
+  //           return context.dataset.indexAxis === "y" ? "end" : "end";
+  //         } else if (chartType === "pie") {
+  //           return "center";
+  //         }
+  //       },
+  //       offset: (context) => {
+  //         const chartType = context.chart.config.type;
+  //         if (chartType === "pie") {
+  //           return 20;
+  //         }
+  //       },
+  //       display: (context) => {
+  //         const chartType = context.chart.config.type;
+  //         return chartType !== "radar";
+  //       },
+  //     },
+  //   },
+  // };
+
+  // Event handlers
+
+  // const answersChartOptions = {
+  //   indexAxis: chartType === "horizontal" ? "y" : "x",
+  //   responsive: true,
+  //   plugins: {
+  //     tooltip: {
+  //       callbacks: {
+  //         label: (context) => {
+  //           const label = context.label;
+  //           const value = context.parsed;
+  //           const percentage = ((value / totalAnswers) * 100).toFixed(1);
+  //           return `${label}: ${value} (${percentage}%)`;
+  //         },
+  //       },
+  //     },
+  //     legend: {
+  //       display: chartType === "pie",
+  //       position: "bottom",
+  //     },
 
   const answersChartOptions = {
     indexAxis: chartType === "horizontal" ? "y" : "x",
@@ -101,24 +181,60 @@ export default function Home() {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const value = context.parsed.y;
+            const label = context.label;
+            const value = context.raw;
             const percentage = ((value / totalAnswers) * 100).toFixed(1);
-            return `Count: ${value} (${percentage}%)`;
+            return `${label}: ${value} (${percentage}%)`;
           },
         },
       },
       legend: {
-        display: false,
+        display: chartType === "pie",
+        position: "bottom",
       },
+
+      
+
+
       datalabels: {
         font: {
           weight: "bold",
+        },
+        formatter: (value, context) => {
+          const percentage = ((value / totalAnswers) * 100).toFixed(1);
+          return `${percentage}%`;
+        },
+        color: "#000",
+        anchor: (context) => {
+          const chartType = context.chart.config.type;
+          if (chartType === "bar") {
+            return context.dataset.indexAxis === "y" ? "end" : "end";
+          } else if (chartType === "pie") {
+            return "end";
+          }
+        },
+        align: (context) => {
+          const chartType = context.chart.config.type;
+          if (chartType === "bar") {
+            return context.dataset.indexAxis === "y" ? "end" : "end";
+          } else if (chartType === "pie") {
+            return "center";
+          }
+        },
+        offset: (context) => {
+          const chartType = context.chart.config.type;
+          if (chartType === "pie") {
+            return 20;
+          }
+        },
+        display: (context) => {
+          const chartType = context.chart.config.type;
+          return chartType !== "radar";
         },
       },
     },
   };
 
-  // Event handlers
   const handleSortToggle = () => setSorted(!sorted);
   const handleTableViewToggle = () => setTableView(!tableView);
   const handleChartTypeChange = (event) => {
@@ -167,24 +283,31 @@ export default function Home() {
   const chartOptions = getChartOptions();
 
   // Render chart based on selected type
-  // Render chart based on selected type
   const renderChart = () => {
     switch (chartType) {
       case "horizontal":
       case "vertical":
         return (
-          <Bar key={tableView} data={answersChartData} options={chartOptions} />
+          <Bar
+            key={tableView}
+            data={answersChartData}
+            options={{ ...chartOptions, ...answersChartOptions }}
+          />
         );
       case "pie":
         return (
-          <Pie key={tableView} data={answersChartData} options={chartOptions} />
+          <Pie
+            key={tableView}
+            data={answersChartData}
+            options={{ ...chartOptions, ...answersChartOptions }}
+          />
         );
       case "spider":
         return (
           <Radar
             key={tableView}
             data={answersChartData}
-            options={chartOptions}
+            options={{ ...chartOptions, ...answersChartOptions }}
           />
         );
       default:
@@ -216,95 +339,103 @@ export default function Home() {
         >
           Answers
         </h2>
-        <div style={{ display: "flex", justifyContent: "end", width: "98%", alignItems: "center" }}>
-  <button
-    onClick={handleSortToggle}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      backgroundColor: "#f0f0f0",
-      border: "none",
-      borderRadius: "4px",
-      padding: "8px 12px",
-      cursor: "pointer",
-      marginRight: "10px",
-    }}
-  >
-    <span style={{ marginRight: "5px" }}>{sorted ? "Unsort" : "Sort"}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {sorted ? (
-        <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
-      ) : (
-        <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
-      )}
-    </svg>
-  </button>
-  <button
-    onClick={handleTableViewToggle}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      backgroundColor: "#f0f0f0",
-      border: "none",
-      borderRadius: "4px",
-      padding: "8px 12px",
-      cursor: "pointer",
-      marginRight: "10px",
-    }}
-  >
-    <span style={{ marginRight: "5px" }}>
-      {tableView ? "Hide Table" : "Show Table"}
-    </span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {tableView ? (
-        <path d="M4 12h16M4 6h16M4 18h16" />
-      ) : (
-        <path d="M4 6h16M4 12h16M4 18h16" />
-      )}
-    </svg>
-  </button>
-  <select
-    onChange={handleChartTypeChange}
-    value={chartType}
-    style={{
-      appearance: "none",
-      backgroundColor: "#f0f0f0",
-      border: "none",
-      borderRadius: "4px",
-      padding: "8px 12px",
-      cursor: "pointer",
-      outline: "none",
-      fontFamily: "Arial, sans-serif",
-      fontSize: "14px",
-    }}
-  >
-    <option value="vertical">Vertical Bar</option>
-    <option value="horizontal">Horizontal Bar</option>
-    <option value="pie">Pie</option>
-    <option value="spider">Spider</option>
-  </select>
-</div>
-
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            width: "98%",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onClick={handleSortToggle}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#f0f0f0",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+          >
+            <span style={{ marginRight: "5px" }}>
+              {sorted ? "Unsort" : "Sort"}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {sorted ? (
+                <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
+              ) : (
+                <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
+              )}
+            </svg>
+          </button>
+          <button
+            onClick={handleTableViewToggle}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#f0f0f0",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+          >
+            <span style={{ marginRight: "5px" }}>
+              {tableView ? "Hide Table" : "Show Table"}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {tableView ? (
+                <path d="M4 12h16M4 6h16M4 18h16" />
+              ) : (
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+          <select
+            onChange={handleChartTypeChange}
+            value={chartType}
+            style={{
+              appearance: "none",
+              backgroundColor: "#f0f0f0",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              outline: "none",
+              fontFamily: "Arial, sans-serif",
+              fontSize: "14px",
+            }}
+          >
+            <option value="vertical">Vertical Bar</option>
+            <option value="horizontal">Horizontal Bar</option>
+            <option value="pie">Pie</option>
+            <option value="spider">Spider</option>
+          </select>
+        </div>
 
         <div style={{ display: "flex", width: "100%", margin: "0 auto" }}>
           {/* Chart container */}
