@@ -72,9 +72,18 @@ export default function AgeGenderChart({ data }) {
 
   return (
     <div>
-      <h2>Age and Gender Distribution</h2>
+      <h2
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "20px",
+          padding: "10px",
+        }}
+      >
+        Age & Gender
+      </h2>
 
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", margin: "20px" }}>
         <div style={{ flex: 2 }}>
           <Bar data={ageGenderChartData} options={ageGenderChartOptions} />
         </div>
