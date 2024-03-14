@@ -95,6 +95,7 @@ export default function LocationChart({ locationData }) {
           marginTop: "20px",
           marginBottom: "20px",
           padding: "10px",
+          
         }}
       >
         Locations

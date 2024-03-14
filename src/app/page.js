@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, Pie, Radar, Doughnut, PolarArea, Line  } from "react-chartjs-2";
+import { Bar, Pie, Radar, Doughnut, PolarArea, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -87,7 +87,17 @@ export default function Home() {
       {
         label: "Count",
         data: answersData,
-        backgroundColor: "#44f1b6",
+        // backgroundColor: "#44f1b6",
+        // backgroundColor: colorPalette,
+        backgroundColor: [
+          "#ff6384",
+          "#36a2eb",
+          "#cc65fe",
+          "#ffce56",
+          "#4bc0c0",
+          "#f77825",
+          "#22aa99",
+        ],
 
         parsing: {
           key: "count",
@@ -204,15 +214,15 @@ export default function Home() {
           },
         };
 
-        case "line":
-  return {
-    // ... options specific to line chart
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
+      case "line":
+        return {
+          // ... options specific to line chart
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        };
 
       default:
         return {};
@@ -268,15 +278,14 @@ export default function Home() {
           />
         );
 
-        case "line":
-  return (
-    <Line
-      key={tableView}
-      data={answersChartData}
-      options={{ ...chartOptions, ...answersChartOptions }}
-    />
-  );
-
+      case "line":
+        return (
+          <Line
+            key={tableView}
+            data={answersChartData}
+            options={{ ...chartOptions, ...answersChartOptions }}
+          />
+        );
 
       default:
         return null;
@@ -303,6 +312,7 @@ export default function Home() {
             marginTop: "20px",
             marginBottom: "20px",
             padding: "10px",
+            color:"#44f1b6"
           }}
         >
           Answers

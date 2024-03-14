@@ -33,7 +33,7 @@ export default function AgeGenderChart({ data }) {
 
   const ageGenderChartOptions = useMemo(
     () => ({
-      indexAxis: 'y',
+      indexAxis: "y",
       responsive: true,
       plugins: {
         tooltip: {
@@ -45,7 +45,7 @@ export default function AgeGenderChart({ data }) {
             },
             label: () => {
               // Return an empty string to avoid showing individual category counts
-              return '';
+              return "";
             },
             footer: (tooltipItems) => {
               // Find the index of the hovered item
@@ -55,16 +55,18 @@ export default function AgeGenderChart({ data }) {
               const femaleValue = ageGenderFemaleData[index];
               const total = ageGenderTotalData[index];
               // Calculate the percentages
-              const malePercentage = ((maleValue / total) * 100).toFixed(1) + '%';
-              const femalePercentage = ((femaleValue / total) * 100).toFixed(1) + '%';
+              const malePercentage =
+                ((maleValue / total) * 100).toFixed(1) + "%";
+              const femalePercentage =
+                ((femaleValue / total) * 100).toFixed(1) + "%";
               // Return the combined data as the footer
               return [
                 `Male: ${maleValue} (${malePercentage})`,
                 `Female: ${femaleValue} (${femalePercentage})`,
                 `Total: ${total}`,
               ];
-            }
-          }
+            },
+          },
         },
         datalabels: {
           display: false,
@@ -84,7 +86,6 @@ export default function AgeGenderChart({ data }) {
     }),
     [ageGenderMaleData, ageGenderFemaleData, ageGenderTotalData]
   );
-  
 
   // const ageGenderChartOptions = useMemo(
   //   () => ({
