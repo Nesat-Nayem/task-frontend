@@ -88,8 +88,6 @@ export default function Home() {
         label: "Count",
         data: answersData,
         backgroundColor: "#44f1b6",
-        // For vertical bar chart, you might want to set the bar thickness
-        // barThickness: chartType === "vertical" ? undefined : "flex", // 'flex' for horizontal or undefined for vertical
 
         parsing: {
           key: "count",
@@ -98,82 +96,7 @@ export default function Home() {
     ],
   };
 
-  // const answersChartOptions = {
-  //   indexAxis: chartType === "horizontal" ? "y" : "x",
-  //   responsive: true,
-  //   plugins: {
-  //     tooltip: {
-  //       callbacks: {
-  //         label: (context) => {
-  //           const value = context.parsed.y;
-  //           const percentage = ((value / totalAnswers) * 100).toFixed(1);
-  //           return `Count: ${value} (${percentage}%)`;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       display: false,
-  //     },
-  //     datalabels: {
-  //       font: {
-  //         weight: "bold",
-  //       },
-  //       formatter: (value, context) => {
-  //         const percentage = ((value / totalAnswers) * 100).toFixed(1);
-  //         return `${percentage}%`;
-  //       },
-  //       color: "#000",
-  //       anchor: (context) => {
-  //         const chartType = context.chart.config.type;
-  //         if (chartType === "bar") {
-  //           return context.dataset.indexAxis === "y" ? "end" : "end";
-  //         } else if (chartType === "pie") {
-  //           return "end";
-  //         }
-  //       },
-  //       align: (context) => {
-  //         const chartType = context.chart.config.type;
-  //         if (chartType === "bar") {
-  //           return context.dataset.indexAxis === "y" ? "end" : "end";
-  //         } else if (chartType === "pie") {
-  //           return "center";
-  //         }
-  //       },
-  //       offset: (context) => {
-  //         const chartType = context.chart.config.type;
-  //         if (chartType === "pie") {
-  //           return 20;
-  //         }
-  //       },
-  //       display: (context) => {
-  //         const chartType = context.chart.config.type;
-  //         return chartType !== "radar";
-  //       },
-  //     },
-  //   },
-  // };
-
-  // Event handlers
-
-  // const answersChartOptions = {
-  //   indexAxis: chartType === "horizontal" ? "y" : "x",
-  //   responsive: true,
-  //   plugins: {
-  //     tooltip: {
-  //       callbacks: {
-  //         label: (context) => {
-  //           const label = context.label;
-  //           const value = context.parsed;
-  //           const percentage = ((value / totalAnswers) * 100).toFixed(1);
-  //           return `${label}: ${value} (${percentage}%)`;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       display: chartType === "pie",
-  //       position: "bottom",
-  //     },
-
+ 
   const answersChartOptions = {
     indexAxis: chartType === "horizontal" ? "y" : "x",
     responsive: true,
