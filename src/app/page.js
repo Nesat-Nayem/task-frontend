@@ -87,7 +87,7 @@ export default function Home() {
       {
         label: "Count",
         data: answersData,
-        backgroundColor: "rgba(153, 102, 255, 0.5)",
+        backgroundColor: "#44f1b6",
         // For vertical bar chart, you might want to set the bar thickness
         barThickness: chartType === "vertical" ? undefined : "flex", // 'flex' for horizontal or undefined for vertical
       },
@@ -270,36 +270,43 @@ export default function Home() {
                         borderBottom: "2px solid #ddd",
                       }}
                     >
-                      Count
+                      Response
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedOrFilteredAnswersData.map((item, index) => (
-                    <tr
-                      key={item._id}
-                      style={{
-                        backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
-                      }}
-                    >
-                      <td
+                  {sortedOrFilteredAnswersData.map((item, index) => {
+                    const percentage = (
+                      (item.count / totalAnswers) *
+                      100
+                    ).toFixed(1);
+                    return (
+                      <tr
+                        key={item._id}
                         style={{
-                          padding: "12px",
-                          borderBottom: "1px solid #ddd",
+                          backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
                         }}
                       >
-                        {item._id || "Unknown"}
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px",
-                          borderBottom: "1px solid #ddd",
-                        }}
-                      >
-                        {item.count}
-                      </td>
-                    </tr>
-                  ))}
+                        <td
+                          style={{
+                            padding: "12px",
+                            borderBottom: "1px solid #ddd",
+                            width: "80%",
+                          }}
+                        >
+                          {item._id || "Unknown"}
+                        </td>
+                        <td
+                          style={{
+                            padding: "12px",
+                            borderBottom: "1px solid #ddd",
+                          }}
+                        >
+                          {item.count} ({percentage}%)
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
