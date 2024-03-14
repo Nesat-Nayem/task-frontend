@@ -39,15 +39,30 @@ export default function AgeGenderChart({ data }) {
         tooltip: {
           callbacks: {
             label: (context) => {
-              const dataset = context.dataset;
-              const value = dataset.data[context.dataIndex];
+              const label = context.dataset.label;
+              const value = context.raw;
               const total = ageGenderTotalData[context.dataIndex];
-              const percentage = ((value / total) * 100).toFixed(1);
-              return `${dataset.label}: ${value} (${percentage}%)`;
+              const percentage = ((value / total) * 100).toFixed(1) + "%";
+              return `${label}: ${value} (${percentage})`;
             },
             footer: (tooltipItems) => {
-              const total = ageGenderTotalData[tooltipItems[0].dataIndex];
-              return `Total: ${total}`;
+              // Find the index of the hovered item
+              const index = tooltipItems[0].dataIndex;
+              // Retrieve the data for both male and female using the index
+              const maleValue = ageGenderMaleData[index];
+              const femaleValue = ageGenderFemaleData[index];
+              const total = ageGenderTotalData[index];
+              // Calculate the percentages
+              const malePercentage =
+                ((maleValue / total) * 100).toFixed(1) + "%";
+              const femalePercentage =
+                ((femaleValue / total) * 100).toFixed(1) + "%";
+              // Return the combined data as the footer
+              return [
+                `Male: ${maleValue} (${malePercentage})`,
+                `Female: ${femaleValue} (${femalePercentage})`,
+                `Total: ${total}`,
+              ];
             },
           },
         },
@@ -67,7 +82,7 @@ export default function AgeGenderChart({ data }) {
         },
       },
     }),
-    [ageGenderTotalData]
+    [ageGenderMaleData, ageGenderFemaleData, ageGenderTotalData]
   );
 
   return (
