@@ -216,20 +216,95 @@ export default function Home() {
         >
           Answers
         </h2>
-        <div style={{ display: "flex", justifyContent: "end", width: "98%" }}>
-          <button onClick={handleSortToggle}>
-            {sorted ? "Unsort" : "Sort"}
-          </button>
-          <button onClick={handleTableViewToggle}>
-            {tableView ? "Hide Table" : "Show Table"}
-          </button>
-          <select onChange={handleChartTypeChange} value={chartType}>
-            <option value="vertical">Vertical Bar</option>
-            <option value="horizontal">Horizontal Bar</option>
-            <option value="pie">Pie</option>
-            <option value="spider">Spider</option>
-          </select>
-        </div>
+        <div style={{ display: "flex", justifyContent: "end", width: "98%", alignItems: "center" }}>
+  <button
+    onClick={handleSortToggle}
+    style={{
+      display: "flex",
+      alignItems: "center",
+      backgroundColor: "#f0f0f0",
+      border: "none",
+      borderRadius: "4px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      marginRight: "10px",
+    }}
+  >
+    <span style={{ marginRight: "5px" }}>{sorted ? "Unsort" : "Sort"}</span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {sorted ? (
+        <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
+      ) : (
+        <path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" />
+      )}
+    </svg>
+  </button>
+  <button
+    onClick={handleTableViewToggle}
+    style={{
+      display: "flex",
+      alignItems: "center",
+      backgroundColor: "#f0f0f0",
+      border: "none",
+      borderRadius: "4px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      marginRight: "10px",
+    }}
+  >
+    <span style={{ marginRight: "5px" }}>
+      {tableView ? "Hide Table" : "Show Table"}
+    </span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {tableView ? (
+        <path d="M4 12h16M4 6h16M4 18h16" />
+      ) : (
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      )}
+    </svg>
+  </button>
+  <select
+    onChange={handleChartTypeChange}
+    value={chartType}
+    style={{
+      appearance: "none",
+      backgroundColor: "#f0f0f0",
+      border: "none",
+      borderRadius: "4px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      outline: "none",
+      fontFamily: "Arial, sans-serif",
+      fontSize: "14px",
+    }}
+  >
+    <option value="vertical">Vertical Bar</option>
+    <option value="horizontal">Horizontal Bar</option>
+    <option value="pie">Pie</option>
+    <option value="spider">Spider</option>
+  </select>
+</div>
+
 
         <div style={{ display: "flex", width: "100%", margin: "0 auto" }}>
           {/* Chart container */}
