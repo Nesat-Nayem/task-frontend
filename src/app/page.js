@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, Pie, Radar, Doughnut, PolarArea } from "react-chartjs-2";
+import { Bar, Pie, Radar, Doughnut, PolarArea, Line  } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -204,6 +204,16 @@ export default function Home() {
           },
         };
 
+        case "line":
+  return {
+    // ... options specific to line chart
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
       default:
         return {};
     }
@@ -257,6 +267,16 @@ export default function Home() {
             options={{ ...chartOptions, ...answersChartOptions }}
           />
         );
+
+        case "line":
+  return (
+    <Line
+      key={tableView}
+      data={answersChartData}
+      options={{ ...chartOptions, ...answersChartOptions }}
+    />
+  );
+
 
       default:
         return null;
@@ -384,6 +404,7 @@ export default function Home() {
             <option value="spider">Spider</option>
             <option value="doughnut">Doughnut</option>
             <option value="polarArea">Polar Area</option>
+            <option value="line">Line</option>
           </select>
         </div>
 
