@@ -87,5 +87,21 @@ export default function LocationChart({ locationData }) {
     },
   };
 
-  return <Bar data={locationChartData} options={locationChartOptions} />;
+  return (
+    <div>
+      <h2
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "20px",
+          padding: "10px",
+        }}
+      >
+        Locations
+      </h2>
+      <div style={{ width: "95%", margin: "0 auto" }}>
+        <Bar data={locationChartData} options={locationChartOptions} />
+      </div>
+    </div>
+  );
 }

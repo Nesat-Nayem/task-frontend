@@ -191,7 +191,7 @@ export default function Home() {
       </div>
 
       <div>
-        <h2>Location Distribution</h2>
+  
         <LocationChart locationData={data} />
       </div>
 
